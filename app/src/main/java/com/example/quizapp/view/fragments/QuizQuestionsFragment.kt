@@ -1,6 +1,7 @@
 package com.example.quizapp.view.fragments
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.Application
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -16,25 +17,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.quizapp.R
-import com.example.quizapp.data.QuestionsDatabase
 import com.example.quizapp.data.model.Question
 import com.example.quizapp.databinding.FragmentQuizQuestionsBinding
+import com.example.quizapp.utils.Constant.CORRECT
+import com.example.quizapp.utils.Constant.OPTIONA
+import com.example.quizapp.utils.Constant.OPTIONB
+import com.example.quizapp.utils.Constant.OPTIONC
+import com.example.quizapp.utils.Constant.OPTIOND
+import com.example.quizapp.utils.Constant.SCORE
 import com.example.quizapp.view.viewmodel.QuizViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import java.util.Collections
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class QuizQuestionsFragment : Fragment() {
 
-    private lateinit var binding:FragmentQuizQuestionsBinding
+    private lateinit var binding: FragmentQuizQuestionsBinding
     private lateinit var viewModel: QuizViewModel
     private lateinit var question: List<Question>
 
@@ -54,7 +58,7 @@ class QuizQuestionsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentQuizQuestionsBinding.inflate(layoutInflater)
         return binding.root
@@ -65,14 +69,13 @@ class QuizQuestionsFragment : Fragment() {
 
         viewModel = ViewModelProvider(
             requireActivity(),
-            ViewModelProvider.AndroidViewModelFactory.getInstance( Application())
+            ViewModelProvider.AndroidViewModelFactory.getInstance(Application())
         )[QuizViewModel::class.java]
 
 
-        viewModel.allQuestions.observe(requireActivity(), Observer{ questions->
+        viewModel.allQuestions.observe(requireActivity(), Observer { questions ->
             questions.let {
                 question = it
-                Log.e(TAG, "onCreate: $it", )
                 initViews()
             }
         })
@@ -92,60 +95,95 @@ class QuizQuestionsFragment : Fragment() {
             updateQueNo = it
         })
 
-        viewModel.timeLeftMilliSeconds.observe(requireActivity()) {
+        viewModel.timeLeftMilliSeconds.observe(requireActivity(), Observer {
             timeLeftMilliSeconds = it
-        }
+        })
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            showExitConfirmationDialog()
+        }
 
     }
 
+    /**
+     * @showNextQuestion for Displays the next question.
+     */
     @SuppressLint("SetTextI18n")
     private fun showNextQuestion() {
         resetRadioButtonState()
-        Log.e(TAG, "showNextQuestion: $qIndex", )
         binding.apply {
-            if(updateQueNo < 10){
+            if (updateQueNo <= 10) {
                 tvNoOfQues.text = "${updateQueNo + 1}/10"
                 updateQueNo++
             }
-            Log.e(TAG, "showNextQuestion: ${question.size}", )
-            if(qIndex < question.size  ){
+            if (qIndex < question.size) {
 
                 timeLeftMilliSeconds = countDownInMilliSecond
                 statCountDownTimer()
 
+                val correctOption = question[qIndex].correctAnswer
+                val incorrectOptions = getRandomIncorrectOptions(
+                    question[qIndex].optionA,
+                    question[qIndex].optionB,
+                    question[qIndex].optionC,
+                    question[qIndex].optionD
+                )
+                val options = mutableListOf<String>()
+                options.add(correctOption)
+                options.addAll(incorrectOptions)
+                options.shuffle()
+
                 tvQuestion.text = question[qIndex].questionText
-                rbtn1.text = question[qIndex].optionA
-                rbtn2.text = question[qIndex].optionB
-                rbtn3.text = question[qIndex].optionC
-                rbtn4.text = question[qIndex].optionD
-            }else{
-                val bundle = Bundle()
-                bundle.putInt("score", score)
-                bundle.putInt("correct", correct)
-                findNavController().navigate(R.id.action_quizQuestionsFragment_to_resultFragment,bundle)
-                requireActivity().finish()
+                rbtn1.text = options[0]
+                rbtn2.text = options[1]
+                rbtn3.text = options[2]
+            } else {
+                finishQuizOrNavigateToResultFragment()
 
             }
             radioGroup.clearCheck()
         }
     }
 
+    /**
+     * @getRandomIncorrectOptions for getting 2 random incorrect options from the available options.
+     */
+    private fun getRandomIncorrectOptions(vararg options: String): MutableList<String> {
+        val incorrectOptions = mutableListOf<String>()
+        val correctOptionIndex = options.indexOf(question[qIndex].correctAnswer)
+        for (i in options.indices) {
+            if (i != correctOptionIndex) {
+                incorrectOptions.add(options[i])
+            }
+        }
+        if (incorrectOptions.size > 2) {
+            incorrectOptions.shuffle()
+            return incorrectOptions.subList(0, 2)
+        } else {
+            return mutableListOf(OPTIONA, OPTIONB, OPTIONC, OPTIOND)
+        }
+
+    }
+
+    /**
+     * @initView Initializes views and starts the quiz
+     */
     @SuppressLint("SetTextI18n")
     private fun initViews() {
 
         binding.apply {
-            tvQuestion.text = question[qIndex].questionText
-            rbtn1.text = question[qIndex].optionA
-            rbtn2.text = question[qIndex].optionB
-            rbtn3.text = question[qIndex].optionC
-            rbtn4.text = question[qIndex].optionD
+            if (qIndex < question.size) {
+                tvQuestion.text = question[qIndex].questionText
+                rbtn1.text = question[qIndex].optionA
+                rbtn2.text = question[qIndex].optionB
+                rbtn3.text = question[qIndex].optionC
+            } else {
+                return
+            }
 
-            // Set individual click listeners for each radio button
             rbtn1.setOnClickListener { onRadioButtonClicked(rbtn1) }
             rbtn2.setOnClickListener { onRadioButtonClicked(rbtn2) }
             rbtn3.setOnClickListener { onRadioButtonClicked(rbtn3) }
-            rbtn4.setOnClickListener { onRadioButtonClicked(rbtn4) }
 
             tvNoOfQues.text = "$updateQueNo/10"
             tvQuestion.text = question[qIndex].questionText
@@ -157,20 +195,23 @@ class QuizQuestionsFragment : Fragment() {
             statCountDownTimer()
         }
     }
-    private fun statCountDownTimer(){
-        countDownTimer = object : CountDownTimer(timeLeftMilliSeconds,countDownInterval){
+
+    /**
+     * @stateCountDownTimer for  Starts or updates the countdown timer.
+     */
+    private fun statCountDownTimer() {
+        countDownTimer = object : CountDownTimer(timeLeftMilliSeconds, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
                 binding.apply {
                     timeLeftMilliSeconds = millisUntilFinished
                     val second = TimeUnit.MILLISECONDS.toSeconds(timeLeftMilliSeconds).toInt()
 
-                    // %02d format the integer with 2 digit
-                    val timer = String.format(Locale.getDefault(),"00: %02d",second)
+                    val timer = String.format(Locale.getDefault(), "00: %02d", second)
                     quizTimer.text = timer
 
-                    if(timeLeftMilliSeconds <10000){
+                    if (timeLeftMilliSeconds < 10000) {
                         quizTimer.setTextColor(Color.RED)
-                    }else{
+                    } else {
                         quizTimer.setTextColor(defaultColor)
                     }
                 }
@@ -182,6 +223,10 @@ class QuizQuestionsFragment : Fragment() {
         }.start()
     }
 
+    /**
+     * @onRadioButtonClicked for Handles radio button clicks.
+     */
+    @SuppressLint("SetTextI18n")
     private fun onRadioButtonClicked(clickedRadioButton: RadioButton) {
         binding.apply {
             // Stop the countdown timer
@@ -190,7 +235,6 @@ class QuizQuestionsFragment : Fragment() {
             val selectedAnswer = clickedRadioButton.text.toString()
             val correctAnswer = question[qIndex].correctAnswer
 
-            // Check if the selected answer is correct
             val isCorrect = (selectedAnswer == correctAnswer)
 
             // Change the background color of the clicked radio button based on correctness
@@ -218,27 +262,57 @@ class QuizQuestionsFragment : Fragment() {
             rbtn1.isEnabled = false
             rbtn2.isEnabled = false
             rbtn3.isEnabled = false
-            rbtn4.isEnabled = false
 
             // Schedule the next question after a delay
             Handler(Looper.getMainLooper()).postDelayed({
                 showNextQuestion()
-            }, 3000) // Delay for 1 second before showing the next question
+            }, 1000) // Delay for 1 second before showing the next question
         }
     }
 
+    /**
+     * @resetRadioButtonState for Resets the state of radio buttons.
+     */
     private fun resetRadioButtonState() {
-        binding.apply {
-            rbtn1.isEnabled = true
-            rbtn2.isEnabled = true
-            rbtn3.isEnabled = true
-            rbtn4.isEnabled = true
+        if (isAdded) {
+            binding.apply {
+                rbtn1.isEnabled = true
+                rbtn2.isEnabled = true
+                rbtn3.isEnabled = true
 
-            rbtn1.background = ContextCompat.getDrawable(requireActivity(), R.drawable.bg)
-            rbtn2.background = ContextCompat.getDrawable(requireActivity(), R.drawable.bg)
-            rbtn3.background = ContextCompat.getDrawable(requireActivity(), R.drawable.bg)
-            rbtn4.background = ContextCompat.getDrawable(requireActivity(), R.drawable.bg)
+                rbtn1.background = ContextCompat.getDrawable(requireActivity(), R.drawable.bg)
+                rbtn2.background = ContextCompat.getDrawable(requireActivity(), R.drawable.bg)
+                rbtn3.background = ContextCompat.getDrawable(requireActivity(), R.drawable.bg)
+            }
         }
     }
+
+    /**
+     * @finishQuizOrNavigateToResultFragment for navigate to Result Screen.
+     */
+    private fun finishQuizOrNavigateToResultFragment() {
+        val bundle = Bundle()
+        bundle.putInt(CORRECT, correct)
+        bundle.putInt(SCORE, score)
+        findNavController().navigate(R.id.action_quizQuestionsFragment_to_resultFragment, bundle)
+    }
+
+    private fun showExitConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Exit Quiz")
+            .setMessage("Are you sure you want to exit the quiz?")
+            .setPositiveButton("Yes") { _, _ ->
+                // User clicked Yes, navigate to StartQuizScreen
+                navigateToStartQuizScreen()
+            }
+            .setNegativeButton("No", null)
+            .show()
+    }
+
+    private fun navigateToStartQuizScreen() {
+        // Navigate to StartQuizScreen using NavController
+        findNavController().navigate(R.id.action_quizQuestionsFragment_to_startQuizFragment)
+    }
+
 
 }

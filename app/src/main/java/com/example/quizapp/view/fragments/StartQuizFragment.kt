@@ -12,7 +12,7 @@ import com.example.quizapp.R
 import com.example.quizapp.data.QuestionsDatabase
 import com.example.quizapp.databinding.FragmentStartQuizBinding
 import com.example.quizapp.utils.SampleQuestions
-import com.example.quizapp.view.viewmodel.QuizViewModel
+import com.example.quizapp.view.viewmodel.StartQuizViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 class StartQuizFragment : Fragment() {
 
     private lateinit var binding: FragmentStartQuizBinding
-    private lateinit var viewModel: QuizViewModel
+    private lateinit var viewModel: StartQuizViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +31,6 @@ class StartQuizFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentStartQuizBinding.inflate(layoutInflater)
-        // Inflate the layout for this fragment
         return binding.root
     }
 
@@ -40,14 +39,12 @@ class StartQuizFragment : Fragment() {
 
         viewModel = ViewModelProvider(
             requireActivity(),
-            ViewModelProvider.AndroidViewModelFactory.getInstance( Application())
-        )[QuizViewModel::class.java]
+            ViewModelProvider.AndroidViewModelFactory.getInstance(Application())
+        )[StartQuizViewModel::class.java]
 
         // initialize the Room database
-        val db = QuestionsDatabase.getInstance(requireContext())
         val questions = SampleQuestions.sampleQuestions
-
-        CoroutineScope(Dispatchers.IO).launch{
+        CoroutineScope(Dispatchers.IO).launch {
             viewModel.addAllQuestion(questions)
         }
 

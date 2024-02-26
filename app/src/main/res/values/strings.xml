@@ -2,4 +2,24 @@
     <string name="app_name">QuizApp</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="quiz_app_title">Quiz App</string>
+    <string name="default_score">Score - 00</string>
+    <string name="question_count">1/10</string>
+    <string name="timer">Time - 00</string>
+    <string name="question">Question</string>
+    <string name="option_1">Option 1</string>
+    <string name="option_2">Option 2</string>
+    <string name="option_3">Option 3</string>
+    <string name="result_text">Better Luck Next Time!!</string>
+    <string name="play_again_btn">Play Again</string>
+    <string name="go_to_home_btn">Go to Home</string>
+    <string name="play_quiz_btn">Play Quiz</string>
+    
+    <string name="you_won">You Won!</string>
+    <string name="congratulation">You Won! Congratulations.</string>
+    <string name="well_done">You Won! Congratulations and Well Done.</string>
+    <string name="awesome">Awesome. You are Genius.Congratulations you won the Game.</string>
+    <string name="better_luck">Better luck next time!!</string>
+    <string name="sorry_failed">Sorry, You failed.</string>
+    <string name="well_played">Well played but you failed. All The Best for Next Game</string>
 </resources>
