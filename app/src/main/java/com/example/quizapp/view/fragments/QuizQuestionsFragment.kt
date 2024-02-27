@@ -3,12 +3,14 @@ package com.example.quizapp.view.fragments
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Application
+import android.content.ContentValues.TAG
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -111,7 +113,7 @@ class QuizQuestionsFragment : Fragment() {
                 tvNoOfQues.text = "${updateQueNo + 1}/10"
                 updateQueNo++
             }
-            if (qIndex < question.size - 1) {
+            if (qIndex < question.size ) {
 
                 timeLeftMilliSeconds = countDownInMilliSecond
                 statCountDownTimer()
@@ -246,8 +248,10 @@ class QuizQuestionsFragment : Fragment() {
                 val scoreForThisQuestion = 10 + (20 - secondsRemaining)
                 score += scoreForThisQuestion
                 correct++
+                Log.e(TAG, "correct: $correct", )
             } else {
                 wrong++
+                Log.e(TAG, "wrong: $wrong", )
             }
             qIndex++
 
