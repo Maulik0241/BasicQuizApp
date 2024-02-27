@@ -16,7 +16,6 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.quizapp.R
@@ -112,7 +111,7 @@ class QuizQuestionsFragment : Fragment() {
                 tvNoOfQues.text = "${updateQueNo + 1}/10"
                 updateQueNo++
             }
-            if (qIndex < question.size) {
+            if (qIndex < question.size - 1) {
 
                 timeLeftMilliSeconds = countDownInMilliSecond
                 statCountDownTimer()
@@ -152,11 +151,11 @@ class QuizQuestionsFragment : Fragment() {
                 incorrectOptions.add(options[i])
             }
         }
-        if (incorrectOptions.size > 2) {
+        return if (incorrectOptions.size > 2) {
             incorrectOptions.shuffle()
-            return incorrectOptions.subList(0, 2)
+            incorrectOptions.subList(0, 2)
         } else {
-            return mutableListOf(OPTIONA, OPTIONB, OPTIONC, OPTIOND)
+            mutableListOf(OPTIONA, OPTIONB, OPTIONC, OPTIOND)
         }
 
     }
@@ -185,6 +184,7 @@ class QuizQuestionsFragment : Fragment() {
             tvQuestion.text = question[qIndex].questionText
 
             defaultColor = quizTimer.textColors
+
 
             timeLeftMilliSeconds = countDownInMilliSecond
 

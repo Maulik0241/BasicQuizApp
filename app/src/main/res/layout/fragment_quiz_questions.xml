@@ -15,7 +15,6 @@
         android:fontFamily="cursive"
         android:gravity="center_horizontal"
         android:text="@string/quiz_app_title"
-        android:textColor="@color/black"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,7 +26,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="88dp"
         android:text="@string/default_score"
-        android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +38,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="136dp"
         android:text="@string/question_count"
-        android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +50,6 @@
         android:layout_marginTop="88dp"
         android:layout_marginEnd="16dp"
         android:text="@string/timer"
-        android:textColor="@color/black"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,9 +68,9 @@
         android:paddingEnd="22dp"
         android:paddingBottom="30dp"
         android:text="@string/question"
-        android:textColor="@android:color/black"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -133,6 +129,7 @@
             android:background="@drawable/bg"
             android:padding="16dp"
             android:text="@string/option_3"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -140,6 +137,7 @@
 
 
     </RadioGroup>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
