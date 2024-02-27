@@ -61,8 +61,8 @@ class ResultFragment : Fragment() {
 
     private fun showExitConfirmationDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Exit Quiz")
-            .setMessage("Are you sure you want to exit the quiz?")
+            .setTitle("Exit App")
+            .setMessage("Are you sure you want to exit the App?")
             .setPositiveButton("Yes") { _, _ ->
                 // User clicked Yes, navigate to StartQuizScreen
                 requireActivity().finish()

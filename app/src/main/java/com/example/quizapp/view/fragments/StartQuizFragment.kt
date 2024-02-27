@@ -1,11 +1,13 @@
 package com.example.quizapp.view.fragments
 
+import android.app.AlertDialog
 import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.quizapp.R
@@ -51,6 +53,22 @@ class StartQuizFragment : Fragment() {
         binding.btnPlay.setOnClickListener {
             findNavController().navigate(R.id.action_startQuizFragment_to_quizQuestionsFragment)
         }
+        requireActivity().onBackPressedDispatcher.addCallback {
+            showExitConfirmationDialog()
+        }
+    }
+
+
+    private fun showExitConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Exit App")
+            .setMessage("Are you sure you want to exit the App?")
+            .setPositiveButton("Yes") { _, _ ->
+                // User clicked Yes, navigate to StartQuizScreen
+                requireActivity().finish()
+            }
+            .setNegativeButton("No", null)
+            .show()
     }
 
 }
