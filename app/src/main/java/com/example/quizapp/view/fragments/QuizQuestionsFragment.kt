@@ -297,6 +297,9 @@ class QuizQuestionsFragment : Fragment() {
         findNavController().navigate(R.id.action_quizQuestionsFragment_to_resultFragment, bundle)
     }
 
+    /**
+     * @showExistConfirmationDialog AlertDialog box for handling navigation
+     */
     private fun showExitConfirmationDialog() {
         AlertDialog.Builder(requireContext())
             .setTitle("Exit Quiz")
@@ -309,6 +312,9 @@ class QuizQuestionsFragment : Fragment() {
             .show()
     }
 
+    /**
+     * @navigateToStartQuizScreen navigate to start_quiz screen from quiz_question_screen
+     */
     private fun navigateToStartQuizScreen() {
         // Navigate to StartQuizScreen using NavController
         findNavController().navigate(R.id.action_quizQuestionsFragment_to_startQuizFragment)

@@ -59,6 +59,9 @@ class ResultFragment : Fragment() {
 
     }
 
+    /**
+     * @showExistConfirmationDialog AlertDialog box for handle exit app from current screen
+     */
     private fun showExitConfirmationDialog() {
         AlertDialog.Builder(requireContext())
             .setTitle("Exit App")
