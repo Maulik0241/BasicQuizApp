@@ -22,4 +22,5 @@
     <string name="better_luck">Better luck next time!!</string>
     <string name="sorry_failed">Sorry, You failed.</string>
     <string name="well_played">Well played but you failed. All The Best for Next Game</string>
+    <string name="default_correct">Correct:9/10\n</string>
 </resources>

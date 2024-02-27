@@ -26,11 +26,6 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
         val dao = QuestionsDatabase.getInstance(application).questionDao()
         repository = QuizRepository(dao)
         allQuestions = repository.allQuestion
-        updateQueNo.value = 1
-        timeLeftMilliSeconds.value = 30000
-        score.value = 0
-        wrong.value = 0
-        qIndex.value = 0
     }
 
 

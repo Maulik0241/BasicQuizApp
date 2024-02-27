@@ -35,12 +35,13 @@ class ResultFragment : Fragment() {
         val correct = requireArguments().getInt(CORRECT, 0)
 
         binding.tvScore.text = "Your Score: $score"
+        binding.tvCorrect.text = "Your Corrects: $correct/10"
 
         binding.tvMessage.text = when (correct) {
             0, 1, 2 -> getString(R.string.sorry_failed)
             3, 4 -> getString(R.string.well_played)
-            5 -> getString(R.string.you_won)
-            7 -> getString(R.string.congratulation)
+            5,6 -> getString(R.string.you_won)
+            7,8 -> getString(R.string.congratulation)
             9 -> getString(R.string.well_done)
             10 -> getString(R.string.awesome)
             else -> getString(R.string.better_luck)

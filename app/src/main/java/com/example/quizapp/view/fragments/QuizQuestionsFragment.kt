@@ -40,7 +40,7 @@ class QuizQuestionsFragment : Fragment() {
 
     // Timer variables
     private var countDownTimer: CountDownTimer? = null
-    private val countDownInMilliSecond: Long = 30000
+    private val countDownInMilliSecond: Long = 20000
     private val countDownInterval: Long = 1000
     private var timeLeftMilliSeconds: Long = 0
     private var defaultColor: ColorStateList? = null
@@ -69,31 +69,31 @@ class QuizQuestionsFragment : Fragment() {
         )[QuizViewModel::class.java]
 
 
-        viewModel.allQuestions.observe(requireActivity(), Observer { questions ->
+        viewModel.allQuestions.observe(requireActivity()) { questions ->
             questions.let {
                 question = it
                 initViews()
             }
-        })
-        viewModel.qIndex.observe(requireActivity(), Observer {
+        }
+        viewModel.qIndex.observe(requireActivity()) {
             qIndex = it
-        })
-        viewModel.score.observe(requireActivity(), Observer {
+        }
+        viewModel.score.observe(requireActivity()) {
             score = it
-        })
-        viewModel.correct.observe(requireActivity(), Observer {
+        }
+        viewModel.correct.observe(requireActivity()) {
             correct = it
-        })
-        viewModel.wrong.observe(requireActivity(), Observer {
+        }
+        viewModel.wrong.observe(requireActivity()) {
             wrong = it
-        })
-        viewModel.updateQueNo.observe(requireActivity(), Observer {
+        }
+        viewModel.updateQueNo.observe(requireActivity()) {
             updateQueNo = it
-        })
+        }
 
-        viewModel.timeLeftMilliSeconds.observe(requireActivity(), Observer {
+        viewModel.timeLeftMilliSeconds.observe(requireActivity()) {
             timeLeftMilliSeconds = it
-        })
+        }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             showExitConfirmationDialog()
