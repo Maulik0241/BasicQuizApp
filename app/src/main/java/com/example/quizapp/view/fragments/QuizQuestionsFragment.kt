@@ -3,15 +3,12 @@ package com.example.quizapp.view.fragments
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Application
-import android.content.ContentValues.TAG
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -32,7 +29,6 @@ import com.example.quizapp.utils.Constant.OPTIONC
 import com.example.quizapp.utils.Constant.OPTIOND
 import com.example.quizapp.utils.Constant.SCORE
 import com.example.quizapp.view.viewmodel.QuizViewModel
-import java.util.Collections
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 

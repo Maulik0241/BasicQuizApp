@@ -11,7 +11,6 @@ import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.quizapp.R
-import com.example.quizapp.data.QuestionsDatabase
 import com.example.quizapp.databinding.FragmentStartQuizBinding
 import com.example.quizapp.utils.SampleQuestions
 import com.example.quizapp.view.viewmodel.StartQuizViewModel
