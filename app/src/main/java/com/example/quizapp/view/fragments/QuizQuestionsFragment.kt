@@ -248,10 +248,8 @@ class QuizQuestionsFragment : Fragment() {
                 val scoreForThisQuestion = 10 + (20 - secondsRemaining)
                 score += scoreForThisQuestion
                 correct++
-                Log.e(TAG, "correct: $correct", )
             } else {
                 wrong++
-                Log.e(TAG, "wrong: $wrong", )
             }
             qIndex++
 
